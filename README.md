@@ -1,6 +1,6 @@
 
 # Proyecto #2 - Juego de Carreras / JAVA
-#ESTE PROYECTO ES POR SI ACASO
+## ESTE PROYECTO ES POR SI ACASO
 
 El proyecto consiste en realizar un juego de carreras con interfaz gráfica para 2 jugadores, aplicando Programación Orientada a Objetos y manejo de excepciones, el usuario puede elegir su vehículo y compiten hasta que uno cruce la línea de meta, también es posible jugar contra la computadora.
 
