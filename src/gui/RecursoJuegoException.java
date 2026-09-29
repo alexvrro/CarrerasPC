@@ -1,8 +1,8 @@
 package gui;
 
 /**
- * Se lanza cuando falla la carga de un recurso del juego
- * (una imagen, un sonido, etc.). Se captura en Main con try-catch.
+ * Se lanza cuando falla la carga de un recurso del juego (una imagen, un
+ * sonido, etc.). Se captura en Main con try-catch.
  */
 public class RecursoJuegoException extends Exception {
 
