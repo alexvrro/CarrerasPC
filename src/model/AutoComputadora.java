@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class AutoComputadora extends Auto {
 
     private int limiteIzquierdo;
@@ -20,8 +19,13 @@ public class AutoComputadora extends Auto {
     }
 
     @Override
+    public void entorno(List<AutoTrafico> traficoCercano) {
+        this.traficoPercibido = traficoCercano;
+    }
+
+    @Override
     public void mover() {
-        AutoTrafico peligro = buscarPeligroMasCercano();
+        AutoTrafico peligro = autoMasCercano();
         if (peligro != null) {
             double centroPeligro = peligro.getX() + peligro.getAncho() / 2.0;
             double centroAuto = x + ancho / 2.0;
@@ -40,14 +44,14 @@ public class AutoComputadora extends Auto {
 
     }
 
-    private AutoTrafico buscarPeligroMasCercano(){
+    private AutoTrafico autoMasCercano() {
         AutoTrafico masCercano = null;
         double menorDistancia = DISTANCIA_REACCION;
 
         for (AutoTrafico t : traficoPercibido) {
             boolean seSolapaEnX = t.getX() + t.getAncho() > x - 15 && t.getX() < x + ancho + 15;
             double distanciaVertical = y - (t.getY() + t.getAlto());
-            if (seSolapaEnX && distanciaVertical >- 20 && distanciaVertical < menorDistancia) {
+            if (seSolapaEnX && distanciaVertical > - 20 && distanciaVertical < menorDistancia) {
                 menorDistancia = distanciaVertical;
                 masCercano = t;
             }

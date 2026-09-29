@@ -12,9 +12,8 @@ import model.AutoTrafico;
 import motor.MotorJuego;
 
 /**
- * Panel donde se dibuja y se juega la carrera.
- * Se puede colocar dentro de una ventana hecha en NetBeans
- * como un JPanel personalizado.
+ * Panel donde se dibuja y se juega la carrera. Se puede colocar dentro de una
+ * ventana hecha en NetBeans como un JPanel personalizado.
  */
 public class PanelJuego extends JPanel {
 

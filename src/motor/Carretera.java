@@ -5,19 +5,21 @@ import java.awt.Graphics;
 
 public class Carretera {
 
-    private int ancho;
+    private int offsetX;
+    private int anchoCarril;
     private int alto;
     private int carreteraIzquierda;
     private int carreteraDerecha;
     private double offsetLineas = 0;
     private double velocidadScroll;
 
-    public Carretera(int ancho, int alto, double velocidadScroll) {
-        this.ancho = ancho;
+    public Carretera(int offsetX, int anchoCarril, int alto, double velocidadScroll) {
+        this.offsetX = offsetX;
+        this.anchoCarril = anchoCarril;
         this.alto = alto;
         this.velocidadScroll = velocidadScroll;
-        this.carreteraIzquierda = ancho / 6;
-        this.carreteraDerecha = ancho - ancho / 6;
+        this.carreteraIzquierda = offsetX + anchoCarril / 6;
+        this.carreteraIzquierda = offsetX + anchoCarril - anchoCarril / 6;
     }
 
     public void actualizar() {
@@ -32,7 +34,7 @@ public class Carretera {
     public void dibujar(Graphics g) {
         // Pasto
         g.setColor(new Color(60, 150, 60));
-        g.fillRect(0, 0, ancho, alto);
+        g.fillRect(offsetX, 0, anchoCarril, alto);
 
         // Asfalto
         g.setColor(new Color(50, 50, 50));

@@ -3,6 +3,7 @@ package model;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.util.List;
 
 public abstract class Auto {
 
@@ -23,6 +24,9 @@ public abstract class Auto {
     }
 
     public abstract void mover();
+
+    public void entorno(List<AutoTrafico> traficoCercano){
+    }
 
     public Rectangle getHitbox() {
         return new Rectangle((int) x, (int) y, ancho, alto);

@@ -27,7 +27,7 @@ public class MotorJuego {
     private int contadorSpawn = 0;
     private int frecuenciaSpawn = 60;
 
-    public MotorJuego(int anchoPantalla, int altoPantalla) {
+    public MotorJuego(int anchoPantalla, int altoPantalla, boolean dosJugadores) {
         this.anchoPantalla = anchoPantalla;
         this.altoPantalla = altoPantalla;
         this.carretera = new Carretera(anchoPantalla, altoPantalla, 6.0);
