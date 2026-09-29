@@ -1,13 +1,12 @@
 package motor;
 
-import model.Auto;
-import model.AutoJugador;
-import model.AutoTrafico;
-
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import model.Auto;
+import model.AutoJugador;
+import model.AutoTrafico;
 
 /**
  * El "cerebro" del juego: mueve todo, detecta colisiones,
@@ -26,7 +25,7 @@ public class MotorJuego {
     private int altoPantalla;
     private Random random = new Random();
     private int contadorSpawn = 0;
-    private int frecuenciaSpawn = 60; // cada cuantos ticks aparece un auto nuevo
+    private int frecuenciaSpawn = 60;
 
     public MotorJuego(int anchoPantalla, int altoPantalla) {
         this.anchoPantalla = anchoPantalla;
@@ -83,7 +82,7 @@ public class MotorJuego {
     };
 
     private void eliminarTraficoFueraDePantalla() {
-        trafico.removeIf(auto -> auto.saliDePantalla(altoPantalla));
+        trafico.removeIf(auto -> auto.outOfPantalla(altoPantalla));
     }
 
     private void detectarColisiones() {
@@ -98,11 +97,11 @@ public class MotorJuego {
     // ---- Metodos que llama la GUI (teclado) ----
 
     public void moverIzquierda(boolean activo) {
-        jugador.setMoviendoIzquierda(activo);
+        jugador.setMovimientoIzquierda(activo);
     }
 
     public void moverDerecha(boolean activo) {
-        jugador.setMoviendoDerecha(activo);
+        jugador.setMovimientoDerecha(activo);
     }
 
     public void reiniciar() {

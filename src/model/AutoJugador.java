@@ -2,19 +2,15 @@ package model;
 
 import java.awt.Color;
 
-/**
- * Auto controlado por el jugador. Se mueve horizontalmente segun el teclado.
- * El motor de juego es quien le avisa hacia donde moverse (ver moverIzquierda/moverDerecha).
- */
 public class AutoJugador extends Auto {
 
     private int limiteIzquierdo;
     private int limiteDerecho;
-    private boolean moviendoIzquierda = false;
-    private boolean moviendoDerecha = false;
+    private boolean movimientoIzquierda = false;
+    private boolean movimientoDerecha = false;
 
     public AutoJugador(double x, double y, int ancho, int alto, double velocidad,
-                        int limiteIzquierdo, int limiteDerecho) {
+            int limiteIzquierdo, int limiteDerecho) {
         super(x, y, ancho, alto, velocidad, Color.BLUE);
         this.limiteIzquierdo = limiteIzquierdo;
         this.limiteDerecho = limiteDerecho;
@@ -22,10 +18,10 @@ public class AutoJugador extends Auto {
 
     @Override
     public void mover() {
-        if (moviendoIzquierda) {
+        if (movimientoIzquierda) {
             x -= velocidad;
         }
-        if (moviendoDerecha) {
+        if (movimientoDerecha) {
             x += velocidad;
         }
         // No dejar que el auto se salga de la carretera
@@ -37,11 +33,11 @@ public class AutoJugador extends Auto {
         }
     }
 
-    public void setMoviendoIzquierda(boolean valor) {
-        this.moviendoIzquierda = valor;
+    public void setMovimientoIzquierda(boolean valor) {
+        this.movimientoIzquierda = valor;
     }
 
-    public void setMoviendoDerecha(boolean valor) {
-        this.moviendoDerecha = valor;
+    public void setMovimientoDerecha(boolean valor) {
+        this.movimientoDerecha = valor;
     }
 }

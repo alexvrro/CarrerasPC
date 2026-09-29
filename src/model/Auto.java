@@ -4,9 +4,6 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 
-/**
- * Clase base para cualquier auto en la pista (jugador o trafico).
- */
 public abstract class Auto {
 
     protected double x;
@@ -25,11 +22,6 @@ public abstract class Auto {
         this.color = color;
     }
 
-    /**
-     * Cada tipo de auto decide cómo se mueve en cada "tick" del juego.
-     * AutoJugador: se mueve según el teclado.
-     * AutoTrafico: avanza solo hacia abajo.
-     */
     public abstract void mover();
 
     public Rectangle getHitbox() {

@@ -3,11 +3,6 @@ package motor;
 import java.awt.Color;
 import java.awt.Graphics;
 
-/**
- * Se encarga del fondo de la carretera: el pasto a los lados,
- * el asfalto y las lineas discontinuas que se mueven para dar
- * sensacion de velocidad.
- */
 public class Carretera {
 
     private int ancho;

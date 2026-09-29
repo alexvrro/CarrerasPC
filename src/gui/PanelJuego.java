@@ -1,16 +1,15 @@
 package gui;
 
-import model.Auto;
-import model.AutoTrafico;
-import motor.MotorJuego;
-
-import javax.swing.JPanel;
-import javax.swing.Timer;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import javax.swing.JPanel;
+import javax.swing.Timer;
+import model.Auto;
+import model.AutoTrafico;
+import motor.MotorJuego;
 
 /**
  * Panel donde se dibuja y se juega la carrera.
@@ -29,7 +28,7 @@ public class PanelJuego extends JPanel {
         this.motor = new MotorJuego(ancho, alto);
 
         // Bucle del juego: se ejecuta cada 16 ms (~60 fps)
-        this.timer = new Timer(16, e -> {
+        this.timer = new Timer(9, e -> {
             motor.actualizar();
             repaint();
         });
