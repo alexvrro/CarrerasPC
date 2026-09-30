@@ -1,6 +1,5 @@
-import gui.VentanaJuego;
 import gui.RecursoJuegoException;
-
+import gui.VentanaJuego;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 

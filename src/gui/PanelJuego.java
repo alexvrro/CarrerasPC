@@ -8,97 +8,154 @@ import java.awt.event.KeyEvent;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 import model.Auto;
-import model.AutoTrafico;
+import model.AutoJugador;
+import motor.CarrilJugadorExtra;
 import motor.MotorJuego;
 
-/**
- * Panel donde se dibuja y se juega la carrera. Se puede colocar dentro de una
- * ventana hecha en NetBeans como un JPanel personalizado.
- */
 public class PanelJuego extends JPanel {
 
-    private MotorJuego motor;
-    private Timer timer;
+    private MotorJuego motorJuego;
+    private Timer temporizador;
 
-    public PanelJuego(int ancho, int alto) {
+    public PanelJuego(int ancho, int alto, boolean dosJugadores) {
         setPreferredSize(new java.awt.Dimension(ancho, alto));
         setFocusable(true);
 
-        this.motor = new MotorJuego(ancho, alto);
+        this.motorJuego = new MotorJuego(ancho, alto, dosJugadores);
 
-        // Bucle del juego: se ejecuta cada 16 ms (~60 fps)
-        this.timer = new Timer(9, e -> {
-            motor.actualizar();
+        this.temporizador = new Timer(9, e -> {
+            motorJuego.actualizar();
             repaint();
         });
 
         configurarTeclado();
-        timer.start();
+        temporizador.start();
     }
 
     private void configurarTeclado() {
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_LEFT || e.getKeyCode() == KeyEvent.VK_A) {
-                    motor.moverIzquierda(true);
-                } else if (e.getKeyCode() == KeyEvent.VK_RIGHT || e.getKeyCode() == KeyEvent.VK_D) {
-                    motor.moverDerecha(true);
-                } else if (e.getKeyCode() == KeyEvent.VK_ENTER && motor.isJuegoTerminado()) {
-                    motor.reiniciar();
+                manejarTecla(e.getKeyCode(), true);
+                if (e.getKeyCode() == KeyEvent.VK_ENTER && motorJuego.isJuegoTerminado()) {
+                    motorJuego.reiniciar();
                 }
             }
 
             @Override
             public void keyReleased(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_LEFT || e.getKeyCode() == KeyEvent.VK_A) {
-                    motor.moverIzquierda(false);
-                } else if (e.getKeyCode() == KeyEvent.VK_RIGHT || e.getKeyCode() == KeyEvent.VK_D) {
-                    motor.moverDerecha(false);
-                }
+                manejarTecla(e.getKeyCode(), false);
             }
         });
+    }
+
+    private void manejarTecla(int codigo, boolean activo) {
+        // Jugador 1 (pista izquierda): A / D
+        if (codigo == KeyEvent.VK_A) {
+            moverSiEsHumano(motorJuego.getcarrilIzquierdo(), true, activo);
+        } else if (codigo == KeyEvent.VK_D) {
+            moverSiEsHumano(motorJuego.getcarrilIzquierdo(), false, activo);
+        } // Jugador 2 (pista derecha): flechas Izquierda / Derecha
+        // (si la pista derecha es Computadora, esto simplemente no tiene efecto)
+        else if (codigo == KeyEvent.VK_LEFT) {
+            moverSiEsHumano(motorJuego.getcarrilDerecho(), true, activo);
+        } else if (codigo == KeyEvent.VK_RIGHT) {
+            moverSiEsHumano(motorJuego.getcarrilDerecho(), false, activo);
+        }
+    }
+
+    private void moverSiEsHumano(CarrilJugadorExtra pista, boolean izquierda, boolean activo) {
+        Auto auto = pista.getAutoJugador();
+        if (auto instanceof AutoJugador humano) {
+            if (izquierda) {
+                humano.setMovimientoIzquierda(activo);
+            } else {
+                humano.setMovimientoDerecha(activo);
+            }
+        }
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        motor.getCarretera().dibujar(g);
+        motorJuego.getcarrilIzquierdo().dibujar(g);
+        motorJuego.getcarrilDerecho().dibujar(g);
 
-        for (AutoTrafico auto : motor.getTrafico()) {
-            auto.dibujar(g);
+        dibujarDivisor(g);
+        dibujarPuntajes(g);
+
+        if (motorJuego.getcarrilIzquierdo().isChocado() && !motorJuego.isJuegoTerminado()) {
+            dibujarEtiquetaChocado(g, motorJuego.getcarrilIzquierdo());
+        }
+        if (motorJuego.getcarrilDerecho().isChocado() && !motorJuego.isJuegoTerminado()) {
+            dibujarEtiquetaChocado(g, motorJuego.getcarrilDerecho());
         }
 
-        Auto jugador = motor.getJugador();
-        jugador.dibujar(g);
-
-        dibujarPuntaje(g);
-
-        if (motor.isJuegoTerminado()) {
+        if (motorJuego.isJuegoTerminado()) {
             dibujarFinDeJuego(g);
         }
     }
 
-    private void dibujarPuntaje(Graphics g) {
+    private void dibujarDivisor(Graphics g) {
         g.setColor(Color.WHITE);
-        g.setFont(new Font("Arial", Font.BOLD, 22));
-        g.drawString("Puntaje: " + motor.getPuntaje(), 20, 35);
+        g.fillRect(getWidth() / 2 - 2, 0, 4, getHeight());
+    }
+
+    private void dibujarPuntajes(Graphics g) {
+        g.setFont(new Font("Arial", Font.BOLD, 18));
+        g.setColor(Color.WHITE);
+
+        CarrilJugadorExtra izq = motorJuego.getcarrilIzquierdo();
+        CarrilJugadorExtra der = motorJuego.getcarrilDerecho();
+
+        g.drawString(izq.getNombre() + ": " + izq.getPuntaje(), 16, 28);
+
+        String texto2 = der.getNombre() + ": " + der.getPuntaje();
+        int ancho2 = g.getFontMetrics().stringWidth(texto2);
+        g.drawString(texto2, getWidth() - ancho2 - 16, 28);
+    }
+
+    private void dibujarEtiquetaChocado(Graphics g, CarrilJugadorExtra pista) {
+        int centroX = pista == motorJuego.getcarrilIzquierdo() ? getWidth() / 4 : getWidth() * 3 / 4;
+        g.setColor(new Color(0, 0, 0, 140));
+        g.fillRect(centroX - getWidth() / 4, 0, getWidth() / 2, getHeight());
+
+        g.setColor(Color.WHITE);
+        g.setFont(new Font("Arial", Font.BOLD, 20));
+        String msg = "Fuera";
+        int msgAncho = g.getFontMetrics().stringWidth(msg);
+        g.drawString(msg, centroX - msgAncho / 2, getHeight() / 2);
     }
 
     private void dibujarFinDeJuego(Graphics g) {
-        g.setColor(new Color(0, 0, 0, 160));
+        g.setColor(new Color(0, 0, 0, 170));
         g.fillRect(0, 0, getWidth(), getHeight());
 
+        CarrilJugadorExtra izq = motorJuego.getcarrilIzquierdo();
+        CarrilJugadorExtra der = motorJuego.getcarrilDerecho();
+        String ganador;
+        if (izq.getPuntaje() > der.getPuntaje()) {
+            ganador = "¡Gana " + izq.getNombre() + "!";
+        } else if (der.getPuntaje() > izq.getPuntaje()) {
+            ganador = "¡Gana " + der.getNombre() + "!";
+        } else {
+            ganador = "¡Empate!";
+        }
+
         g.setColor(Color.WHITE);
-        g.setFont(new Font("Arial", Font.BOLD, 32));
-        String msg = "¡Chocaste!";
-        int msgAncho = g.getFontMetrics().stringWidth(msg);
-        g.drawString(msg, (getWidth() - msgAncho) / 2, getHeight() / 2 - 20);
+        g.setFont(new Font("Arial", Font.BOLD, 30));
+        centrarTexto(g, ganador, getHeight() / 2 - 30);
 
         g.setFont(new Font("Arial", Font.PLAIN, 18));
-        String msg2 = "Presiona ENTER para reintentar";
-        int msg2Ancho = g.getFontMetrics().stringWidth(msg2);
-        g.drawString(msg2, (getWidth() - msg2Ancho) / 2, getHeight() / 2 + 15);
+        centrarTexto(g, izq.getNombre() + ": " + izq.getPuntaje()
+                + "   |   " + der.getNombre() + ": " + der.getPuntaje(), getHeight() / 2 + 5);
+
+        centrarTexto(g, "Presiona ENTER para reintentar", getHeight() / 2 + 40);
+    }
+
+    private void centrarTexto(Graphics g, String texto, int y) {
+        int ancho = g.getFontMetrics().stringWidth(texto);
+        g.drawString(texto, (getWidth() - ancho) / 2, y);
     }
 }
