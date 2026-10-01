@@ -19,7 +19,7 @@ public class Carretera {
         this.alto = alto;
         this.velocidadScroll = velocidadScroll;
         this.carreteraIzquierda = offsetX + anchoCarril / 6;
-        this.carreteraIzquierda = offsetX + anchoCarril - anchoCarril / 6;
+        this.carreteraDerecha = offsetX + anchoCarril - anchoCarril / 6;
     }
 
     public void actualizar() {
