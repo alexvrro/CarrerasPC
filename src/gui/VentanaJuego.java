@@ -12,8 +12,8 @@ public class VentanaJuego extends JFrame {
 
         boolean dosJugadores = preguntarModoDeJuego();
 
-        int anchoTotal = 700; // dos carriles de 350px cada uno
-        int alto = 650;
+        int anchoTotal = 1200; // dos carriles de 350px cada uno
+        int alto = 750;
         PanelJuego panelJuego = new PanelJuego(anchoTotal, alto, dosJugadores);
         add(panelJuego);
 

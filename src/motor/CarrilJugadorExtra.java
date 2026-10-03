@@ -23,7 +23,7 @@ public class CarrilJugadorExtra {
     private int altoPantalla;
     private Random random = new Random();
     private int contadorSpawn = 0;
-    private int frecuenciaSpawn = 60;
+    private int frecuenciaSpawn = 30;
     private BufferedImage[] imagenesTrafico;
     private static final Color[] COLORES_TRAFICO = {
         Color.red, Color.orange, new Color(150, 0, 150), Color.DARK_GRAY
@@ -68,15 +68,14 @@ public class CarrilJugadorExtra {
             contadorSpawn = 0;
             int anchoAuto = 50;
             int altoAuto = 90;
-            int maxX = carrilDerecho - anchoAuto;
-            if (maxX <= carrilIzquierdo) {
-                return;
-            }
-            double x = carrilIzquierdo + random.nextDouble() * (maxX - carrilIzquierdo);
-            double velocidad = 4.0 + random.nextDouble() * 3.0;
+
+            int indiceCarril = random.nextInt(carretera.getNumCarriles());
+            double centroCarril = carretera.getCentroCarril(indiceCarril);
+            double x = centroCarril - anchoAuto / 2.0;
+
+            double velocidad = 5.0 + random.nextDouble() * 3.0;
             Color color = COLORES_TRAFICO[random.nextInt(COLORES_TRAFICO.length)];
             AutoTrafico nuevo = new AutoTrafico(x, -altoAuto, anchoAuto, altoAuto, velocidad, color);
-            // Imagen al azar para que el tráfico no se vea todo igual
             nuevo.setImagen(imagenesTrafico[random.nextInt(imagenesTrafico.length)]);
             trafico.add(nuevo);
         }
@@ -131,4 +130,3 @@ public class CarrilJugadorExtra {
         return carrilDerecho;
     }
 }
- 

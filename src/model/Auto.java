@@ -14,7 +14,7 @@ public abstract class Auto {
     protected int alto;
     protected double velocidad;
     protected Color color;
-    protected BufferedImage imagen;  
+    protected BufferedImage imagen;
 
     public Auto(double x, double y, int ancho, int alto, double velocidad, Color color) {
         this.x = x;
