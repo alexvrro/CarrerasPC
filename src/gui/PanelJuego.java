@@ -17,7 +17,7 @@ public class PanelJuego extends JPanel {
     private MotorJuego motorJuego;
     private Timer temporizador;
 
-    public PanelJuego(int ancho, int alto, boolean dosJugadores) {
+    public PanelJuego(int ancho, int alto, boolean dosJugadores) throws RecursoJuegoException {
         setPreferredSize(new java.awt.Dimension(ancho, alto));
         setFocusable(true);
 

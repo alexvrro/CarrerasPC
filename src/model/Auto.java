@@ -3,6 +3,7 @@ package model;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 import java.util.List;
 
 public abstract class Auto {
@@ -13,6 +14,7 @@ public abstract class Auto {
     protected int alto;
     protected double velocidad;
     protected Color color;
+    protected BufferedImage imagen;  
 
     public Auto(double x, double y, int ancho, int alto, double velocidad, Color color) {
         this.x = x;
@@ -30,11 +32,6 @@ public abstract class Auto {
 
     public Rectangle getHitbox() {
         return new Rectangle((int) x, (int) y, ancho, alto);
-    }
-
-    public void dibujar(Graphics g) {
-        g.setColor(color);
-        g.fillRoundRect((int) x, (int) y, ancho, alto, 12, 12);
     }
 
     public double getX() {
@@ -59,5 +56,18 @@ public abstract class Auto {
 
     public void setY(double y) {
         this.y = y;
+    }
+    
+    public void setImagen(BufferedImage imagen) {
+    this.imagen = imagen;
+    }
+
+    public void dibujar(Graphics g) {
+        if (imagen != null) {
+            g.drawImage(imagen, (int) x, (int) y, ancho, alto, null);
+        } else {
+            g.setColor(color);
+            g.fillRoundRect((int) x, (int) y, ancho, alto, 12, 12);
+        }
     }
 }
