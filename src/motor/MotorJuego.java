@@ -22,6 +22,7 @@ public class MotorJuego {
  
     private BufferedImage imagenAuto;
     private BufferedImage imagenComputadora;
+    private BufferedImage[] imagenesTrafico;
  
     public MotorJuego(int anchoPantalla, int altoPantalla, boolean dosJugadores) throws RecursoJuegoException {
         this.altoPantalla = altoPantalla;
@@ -31,6 +32,12 @@ public class MotorJuego {
         // Las imágenes se cargan UNA vez, antes de crear los autos
         this.imagenAuto = cargarImagen("/recursos/auto.png");
         this.imagenComputadora = cargarImagen("/recursos/auto_computadora.png");
+        this.imagenesTrafico = new BufferedImage[]{
+            cargarImagen("/recursos/trafico1.png"),
+            cargarImagen("/recursos/trafico2.png"),
+            cargarImagen("/recursos/trafico3.png"),
+            cargarImagen("/recursos/trafico4.png")
+        };
  
         this.carreteraIzquierda = new Carretera(0, anchoCarril, altoPantalla, 6.0);
         this.carreteraDerecha = new Carretera(anchoCarril, anchoCarril, altoPantalla, 6.0);
@@ -38,9 +45,10 @@ public class MotorJuego {
         Auto auto1 = segundoJugador(carreteraIzquierda, false);
         Auto auto2 = segundoJugador(carreteraDerecha, !dosJugadores);
  
-        this.carrilIzquierdo = new CarrilJugadorExtra("Jugador 1", carreteraIzquierda, auto1, altoPantalla);
+        this.carrilIzquierdo = new CarrilJugadorExtra("Jugador 1", carreteraIzquierda, auto1, altoPantalla,
+                imagenesTrafico);
         this.carrilDerecho = new CarrilJugadorExtra(dosJugadores ? "Jugador 2" : "Computadora",
-                carreteraDerecha, auto2, altoPantalla);
+                carreteraDerecha, auto2, altoPantalla, imagenesTrafico);
     }
  
     private BufferedImage cargarImagen(String ruta) throws RecursoJuegoException {
