@@ -16,6 +16,8 @@ public class PanelJuego extends JPanel {
 
     private MotorJuego motorJuego;
     private Timer temporizador;
+    private boolean pausado = false;
+    private Runnable alVolverAlMenu;
 
     public PanelJuego(int ancho, int alto, boolean dosJugadores) throws RecursoJuegoException {
         setPreferredSize(new java.awt.Dimension(ancho, alto));
@@ -24,7 +26,9 @@ public class PanelJuego extends JPanel {
         this.motorJuego = new MotorJuego(ancho, alto, dosJugadores);
 
         this.temporizador = new Timer(9, e -> {
-            motorJuego.actualizar();
+            if (!pausado) {
+                motorJuego.actualizar();
+            }
             repaint();
         });
 
@@ -32,12 +36,54 @@ public class PanelJuego extends JPanel {
         temporizador.start();
     }
 
+    /**
+     * Quien crea el panel (la ventana) indica qué hacer cuando el jugador
+     * pide volver al menú principal.
+     */
+    public void setAlVolverAlMenu(Runnable alVolverAlMenu) {
+        this.alVolverAlMenu = alVolverAlMenu;
+    }
+
+    /**
+     * Detiene el reloj del juego. Se llama al salir de la partida.
+     */
+    public void detener() {
+        temporizador.stop();
+    }
+
+    private void volverAlMenu() {
+        if (alVolverAlMenu != null) {
+            alVolverAlMenu.run();
+        }
+    }
+
     private void configurarTeclado() {
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                manejarTecla(e.getKeyCode(), true);
-                if (e.getKeyCode() == KeyEvent.VK_ENTER && motorJuego.isJuegoTerminado()) {
+                int tecla = e.getKeyCode();
+                boolean terminado = motorJuego.isJuegoTerminado();
+
+                // ESC: pausa / continuar (no aplica cuando la partida ya terminó)
+                if (tecla == KeyEvent.VK_ESCAPE && !terminado) {
+                    pausado = !pausado;
+                    repaint();
+                    return;
+                }
+
+                // M: volver al menú principal (desde la pausa o al terminar)
+                if (tecla == KeyEvent.VK_M && (pausado || terminado)) {
+                    volverAlMenu();
+                    return;
+                }
+
+                // En pausa se ignoran los controles de los autos
+                if (pausado) {
+                    return;
+                }
+
+                manejarTecla(tecla, true);
+                if (tecla == KeyEvent.VK_ENTER && terminado) {
                     motorJuego.reiniciar();
                 }
             }
@@ -94,6 +140,8 @@ public class PanelJuego extends JPanel {
 
         if (motorJuego.isJuegoTerminado()) {
             dibujarFinDeJuego(g);
+        } else if (pausado) {
+            dibujarPausa(g);
         }
     }
 
@@ -128,6 +176,19 @@ public class PanelJuego extends JPanel {
         g.drawString(msg, centroX - msgAncho / 2, getHeight() / 2);
     }
 
+    private void dibujarPausa(Graphics g) {
+        g.setColor(new Color(0, 0, 0, 170));
+        g.fillRect(0, 0, getWidth(), getHeight());
+
+        g.setColor(Color.WHITE);
+        g.setFont(new Font("Arial", Font.BOLD, 30));
+        centrarTexto(g, "PAUSA", getHeight() / 2 - 30);
+
+        g.setFont(new Font("Arial", Font.PLAIN, 18));
+        centrarTexto(g, "ESC - Continuar", getHeight() / 2 + 10);
+        centrarTexto(g, "M - Volver al menú principal", getHeight() / 2 + 40);
+    }
+
     private void dibujarFinDeJuego(Graphics g) {
         g.setColor(new Color(0, 0, 0, 170));
         g.fillRect(0, 0, getWidth(), getHeight());
@@ -151,7 +212,8 @@ public class PanelJuego extends JPanel {
         centrarTexto(g, izq.getNombre() + ": " + izq.getPuntaje()
                 + "   |   " + der.getNombre() + ": " + der.getPuntaje(), getHeight() / 2 + 5);
 
-        centrarTexto(g, "Presiona ENTER para reintentar", getHeight() / 2 + 40);
+        centrarTexto(g, "ENTER - Reintentar", getHeight() / 2 + 40);
+        centrarTexto(g, "M - Volver al menú principal", getHeight() / 2 + 68);
     }
 
     private void centrarTexto(Graphics g, String texto, int y) {
