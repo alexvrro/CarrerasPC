@@ -9,7 +9,7 @@ public class AutoComputadora extends Auto {
     private int limiteIzquierdo;
     private int limiteDerecho;
     private List<AutoTrafico> traficoPercibido = new ArrayList<>();
-    private static final double DISTANCIA_REACCION = 170;
+    private static final double DISTANCIA_REACCION = 70;
 
     public AutoComputadora(double x, double y, int ancho, int alto, double velocidad, int limiteIzquierdo,
             int limiteDerecho) {
